@@ -6,6 +6,7 @@ import fileUpload from "express-fileupload";
 import { connection } from "./database/connection.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./routes/userRoute.js"
+import auctionRouter from "./routes/auctionRoute.js"
 
 const app = express();
 config({ path: './config/config.env' })
@@ -24,6 +25,7 @@ app.use(fileUpload({
     tempFileDir:"/tmp/"
 }))
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/auction",auctionRouter)
 
 connection();
 
