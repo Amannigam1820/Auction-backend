@@ -1,8 +1,26 @@
+import mongoose from "mongoose";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../middlewares/error.js";
+import { Auction } from "../models/auctionSchema.js";
 import { PaymentProof } from "../models/commissionProofSchema.js";
 import { User } from "../models/userSchema.js";
 import { v2 as cloudinry } from "cloudinary";
+import { Commission } from "../models/commissionSchema.js";
+
+
+export const calculateCommission = async(auctionId)=>{
+  const auction = await Auction.findById(auctionId);
+  if(!mongoose.Types.ObjectId.isValid(auctionId)){
+    return next (new ErrorHandler("Invalid Id Format",402))
+  }
+  const commissionRate = 0.05;
+  const commission = auction.currentBid * commissionRate;
+  return commission
+}
+
+
+
+
 
 export const proofOfCommission = catchAsyncError(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {

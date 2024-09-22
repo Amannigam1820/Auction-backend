@@ -157,7 +157,7 @@ export const monthlyRevenue = catchAsyncError(async (req, res, next) => {
     },
   ]);
 
-  const transformDataToMonthlyArray = (payments, totalMonth = 12) => {
+  const transformDataToMonthlyArray = (payments, totalMonth = 12 ) => {
     const result = Array(totalMonth).fill(0);
 
     payments.forEach((payment) => {

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const auctionSchema = new mongoose.Schema({
-    title: String,
+  title: String,
   description: String,
   startingBid: Number,
   category: String,
@@ -22,21 +22,21 @@ const auctionSchema = new mongoose.Schema({
       required: true,
     },
   },
-  createdBy:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User",
-    required:true
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  bids:[
+  bids: [
     {
-        userId:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Bid"
-        },
-        userName:String,
-        profileImage:String,
-        amount:Number
-    }
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Bid",
+      },
+      userName: String,
+      profileImage: String,
+      amount: Number,
+    },
   ],
   highestBidder: {
     type: mongoose.Schema.Types.ObjectId,
@@ -49,7 +49,7 @@ const auctionSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  }
-})
+  },
+});
 
-export const Auction = mongoose.model("Auction",auctionSchema)
+export const Auction = mongoose.model("Auction", auctionSchema);

@@ -11,6 +11,8 @@ import bidRouter from "./routes/bidRoute.js"
 import commissionProofRouter from "./routes/commissionRoute.js"
 import superAdminRouter from "./routes/superAdminRoute.js"
 
+import {endedAuctionCron} from "./automation/endedAuctionCron.js"
+
 const app = express();
 config({ path: './config/config.env' })
 
@@ -33,6 +35,8 @@ app.use("/api/v1/bid",bidRouter)
 app.use("/api/v1/commission",commissionProofRouter)
 app.use("/api/v1/superAdmin",superAdminRouter)
 
+
+//endedAuctionCron()
 connection();
 
 app.use(errorMiddleware)
