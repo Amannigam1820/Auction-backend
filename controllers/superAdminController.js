@@ -86,7 +86,91 @@ export const deletePaymentProof = catchAsyncError(async (req, res, next) => {
   });
 });
 
+export const fetchAllUser = catchAsyncError(async (req, res, next) => {
+  const users = await User.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+          role: "$role",
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        month: "$_id.month",
+        year: "$_id.year",
+        role: "$_id.role",
+        count: 1,
+        _id: 0,
+      },
+    },
+    {
+      $sort: { year: 1, month: 1 },
+    },
+  ]);
 
-export const fetchAllUser = catchAsyncError(async(req,res,next)=>{
-  
-})
+  const bidders = users.filter((user) => user.role === "Bidder");
+  const auctioneer = users.filter((user) => user.role === "Auctioneer");
+
+  // console.log(bidders);
+  // console.log(auctioneer);
+
+  const transformDataToMonthlyArray = (data, totalMonth = 12) => {
+    const result = Array(totalMonth).fill(0);
+    //   console.log(result);
+
+    data.forEach((item) => {
+      result[item.month - 1] = item.count;
+    });
+    return result;
+  };
+
+  const biddersArray = transformDataToMonthlyArray(bidders);
+  const autioneerArray = transformDataToMonthlyArray(auctioneer);
+
+  // console.log(biddersArray);
+  // console.log(autioneerArray);
+
+  res.status(200).json({
+    success: true,
+    biddersArray,
+    autioneerArray,
+  });
+});
+
+export const monthlyRevenue = catchAsyncError(async (req, res, next) => {
+  const payments = await Commission.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+        totalAmount: { $sum: "$amount" },
+      },
+    },
+    {
+      $sort: { "_id.year": 1, "_id.month": 1 },
+    },
+  ]);
+
+  const transformDataToMonthlyArray = (payments, totalMonth = 12) => {
+    const result = Array(totalMonth).fill(0);
+
+    payments.forEach((payment) => {
+      result[payment._id.month - 1] = payment.totalAmount;
+    });
+
+    return result;
+  };
+
+  const totalMonthlyRevenue = transformDataToMonthlyArray(payments);
+
+  res.status(200).json({
+    success: true,
+    totalMonthlyRevenue,
+  });
+});
