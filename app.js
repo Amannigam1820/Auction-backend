@@ -8,6 +8,8 @@ import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./routes/userRoute.js"
 import auctionRouter from "./routes/auctionRoute.js"
 import bidRouter from "./routes/bidRoute.js"
+import commissionProofRouter from "./routes/commissionRoute.js"
+import superAdminRouter from "./routes/superAdminRoute.js"
 
 const app = express();
 config({ path: './config/config.env' })
@@ -28,6 +30,8 @@ app.use(fileUpload({
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/auction",auctionRouter)
 app.use("/api/v1/bid",bidRouter)
+app.use("/api/v1/commission",commissionProofRouter)
+app.use("/api/v1/superAdmin",superAdminRouter)
 
 connection();
 
